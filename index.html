@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新安琅琊王氏道桥恒公支<br>谱载查询暨先祖祭祀平台</title>
     <style>
+        /* 原有样式保持不变 */
         :root {
             --base-font-size: 16px;
             --primary-color: #9B2226;
@@ -362,29 +363,31 @@
             border-top: 1px solid var(--border-color);
         }
         
-        /* 音效控制样式 */
+        /* 音效控制样式 - 横版 */
         .audio-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+            max-width: 800px;
+            margin: 30px auto;
             background: var(--card-bg);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 3px 9px rgba(0,0,0,0.15);
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 3px 9px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
-            z-index: 1000;
-            max-width: 200px;
         }
         
         .audio-title {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: var(--primary-color);
-            font-size: calc(var(--base-font-size) * 0.9);
+            font-size: calc(var(--base-font-size) * 1.1);
+            text-align: center;
         }
         
         .audio-control-group {
-            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
         
         .audio-control-group:last-child {
@@ -392,21 +395,20 @@
         }
         
         .audio-label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: calc(var(--base-font-size) * 0.8);
+            font-size: calc(var(--base-font-size) * 0.9);
+            min-width: 100px;
         }
         
         .audio-slider {
-            width: 100%;
-            margin: 5px 0;
+            flex: 1;
+            margin: 0 10px;
         }
         
         .audio-toggle {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: calc(var(--base-font-size) * 0.8);
+            font-size: calc(var(--base-font-size) * 0.9);
         }
         
         .audio-toggle input {
@@ -415,17 +417,17 @@
         
         .audio-presets {
             display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-top: 10px;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
         }
         
         .audio-preset {
-            padding: 4px 8px;
+            padding: 6px 12px;
             background: var(--secondary-color);
             color: white;
             border-radius: 4px;
-            font-size: calc(var(--base-font-size) * 0.7);
+            font-size: calc(var(--base-font-size) * 0.8);
             cursor: pointer;
             transition: background 0.3s;
         }
@@ -436,7 +438,29 @@
     </style>
 </head>
 <body>
-    <!-- 音效控制面板 -->
+    <header>
+        <h1>新安琅琊王氏道桥恒公支<br>谱载查询暨先祖祭祀平台</h1>
+        <p>传承家族意识 · 卅六世先军使命</p>
+    </header>
+
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="codeInput" placeholder="请输入关键词（如：恒、崇道、砡宝）">
+            <button onclick="searchPerson()">查询</button>
+        </div>
+        <div class="font-size-control">
+            <button onclick="adjustFontSize(-1)">显示－</button>
+            <button onclick="adjustFontSize(1)">显示＋</button>
+        </div>
+        <div class="history-container">
+            <div class="history-title">查询历史：</div>
+            <div class="history-list" id="historyList">暂无查询历史</div>
+        </div>
+    </div>
+
+    <div id="result"></div>
+
+    <!-- 音效控制面板 - 移动到完整世系后、祭祀面板前 -->
     <div class="audio-controls">
         <div class="audio-title">祭祀音效控制</div>
         
@@ -468,28 +492,6 @@
         </div>
     </div>
 
-    <header>
-        <h1>新安琅琊王氏道桥恒公支<br>谱载查询暨先祖祭祀平台</h1>
-        <p>传承家族意识 · 卅六世先军使命</p>
-    </header>
-
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" id="codeInput" placeholder="请输入关键词（如：恒、崇道、砡宝）">
-            <button onclick="searchPerson()">查询</button>
-        </div>
-        <div class="font-size-control">
-            <button onclick="adjustFontSize(-1)">显示－</button>
-            <button onclick="adjustFontSize(1)">显示＋</button>
-        </div>
-        <div class="history-container">
-            <div class="history-title">查询历史：</div>
-            <div class="history-list" id="historyList">暂无查询历史</div>
-        </div>
-    </div>
-
-    <div id="result"></div>
-
     <div id="memorialSection">
         <div class="memorial-header">
             <div id="mainTributeTarget">当前祭祀</div>
@@ -520,7 +522,7 @@
         </div>
 
         <div id="incenseAnimation">
-            🔥🔥🔥🔥 🎋🎋🎋 祭祀中... 🎋🎋🎋 🔥🔥🔥🔥
+            🔥🔥🔥 🎋 祭祀中... 🎋 🔥🔥🔥
             <div id="tributeMessage"></div>
         </div>
 
@@ -528,7 +530,7 @@
     </div>
 
     <script>
-        // 家谱数据（简化版）
+        // 家谱数据（简略版）
         const genealogyData = {
     "十九世祖": {
         "name": "恒",
@@ -1190,7 +1192,7 @@
                     <div class="tree-title">完整家族世系（从十九世开始，共${lineage.length}代）</div>
             `;
             
-// 渲染祖先世系
+            // 渲染祖先世系
             lineage.forEach((ancestor, index) => {
                 html += `
                     <div class="generation">
@@ -1231,9 +1233,9 @@
             return html;
         }
 
-        // 检测是否有殁殁葬信息
+        // 检测是否有殁殁殁殁葬信息
         function hasDeathBurialInfo(text) {
-            return text.includes('殁殁于') || text.includes('葬于') || text.includes('殁殁') || text.includes('葬');
+            return text.includes('殁殁殁殁于') || text.includes('葬于') || text.includes('殁殁殁殁') || text.includes('葬');
         }
 
         // 提取配偶信息
@@ -1255,7 +1257,7 @@
             text = text.replace(/│/g, '\n');
             
             // 2. 在指定关键字前添加换行符
-            const lineBreakKeywords = ['生于', '殁殁于', '葬于', '幼年夭折'];
+            const lineBreakKeywords = ['生于', '殁殁殁殁于', '葬于', '幼年夭折'];
             lineBreakKeywords.forEach(keyword => {
                 text = text.replace(new RegExp(`([^\\n])(${keyword})`, 'g'), '$1\n$2');
             });
@@ -1446,12 +1448,12 @@
                 
                 // 随机祭祀语
                 const blessings = isLarge ? 
-                    [`🙏🙏 为${personType}上${incenseType}，愿家族昌盛，子孙安康！`, 
-                     `🙏🙏 焚${incenseType}敬先祖，福泽延绵万代兴！`,
-                     `🙏🙏 敬${incenseType}以寄哀思，愿先灵安息，佑我后人！`] :
-                    [`🙏🙏 为${personType}上普通香祭祀，愿平安顺遂！`, 
-                     `🙏🙏 一柱清香敬先祖，血脉相连情意长！`,
-                     `🙏🙏 焚香祭祖，祈愿家族兴旺，福寿绵长！`];
+                    [`🙏🙏🙏🙏🙏🙏🙏🙏🙏 为${personType}上${incenseType}，愿家族昌盛，子孙安康！`, 
+                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 焚${incenseType}敬先祖，福泽延绵万代兴！`,
+                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 敬${incenseType}以寄哀思，愿先灵安息，佑我后人！`] :
+                    [`🙏🙏🙏🙏🙏🙏🙏🙏🙏 为${personType}上普通香祭祀，愿平安顺遂！`, 
+                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 一柱清香敬先祖，血脉相连情意长！`,
+                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 焚香祭祖，祈愿家族兴旺，福寿绵长！`];
                 const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
                 messageEl.textContent = randomBlessing;
                 
