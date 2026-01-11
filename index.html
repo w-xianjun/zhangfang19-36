@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新安琅琊王氏道桥恒公支<br>谱载查询暨先祖祭祀平台</title>
+    <title>新安琅琊王氏道桥恒公支<br>谱载查询暨先世祭祀平台</title>
     <style>
-        /* 原有样式保持不变 */
         :root {
             --base-font-size: 16px;
             --primary-color: #9B2226;
@@ -321,15 +320,15 @@
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
+            justify-content: center; /* 新增：使内容水平居中 */
+            width: 100%; /* 新增：确保容器宽度填满 */
         }
 
-        .incense-count {
-            color: #666;
-            font-size: calc(var(--base-font-size) * 0.9);
-        }
-
-        #spouseMemorialArea {
-            display: none;
+        /* 可选：调整按钮样式 */
+        #incenseBtn, #largeIncenseBtn {
+            padding: 10px 20px; /* 增大按钮内边距 */
+            min-width: 120px; /* 设置最小宽度 */
+            font-size: calc(var(--base-font-size) * 1.1); /* 增大字体 */
         }
 
         #incenseAnimation {
@@ -341,20 +340,15 @@
             background: rgba(155, 34, 38, 0.1);
             border-radius: 8px;
             border: 1px solid var(--primary-color);
-        }
-
-        #incenseAnimation.large {
-            font-size: calc(var(--base-font-size) * 1.5);
+            font-size: calc(var(--base-font-size) * 2.5);
+            font-weight: bold;
         }
 
         #tributeMessage {
             margin-top: 10px;
             color: var(--primary-color);
             font-weight: bold;
-        }
-
-        #tributeMessage.large {
-            font-size: calc(var(--base-font-size) * 1.2);
+            font-size: calc(var(--base-font-size) * 1.5);
         }
 
         #tributeHistory {
@@ -363,83 +357,99 @@
             border-top: 1px solid var(--border-color);
         }
         
-        /* 音效控制样式 - 横版 */
-        .audio-controls {
+        /* 新的音量控制样式 */
+        .volume-controls {
             max-width: 800px;
             margin: 30px auto;
             background: var(--card-bg);
-            padding: 25px;
+            padding: 20px;
             border-radius: 6px;
             box-shadow: 0 3px 9px rgba(0,0,0,0.08);
             border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         
-        .audio-title {
+        .volume-title {
             font-weight: bold;
-            margin-bottom: 15px;
             color: var(--primary-color);
             font-size: calc(var(--base-font-size) * 1.1);
             text-align: center;
+            margin-bottom: 10px;
         }
         
-        .audio-control-group {
+        .volume-control-group {
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
         }
         
-        .audio-control-group:last-child {
-            margin-bottom: 0;
-        }
-        
-        .audio-label {
+        .volume-label {
             font-size: calc(var(--base-font-size) * 0.9);
             min-width: 100px;
         }
         
-        .audio-slider {
+        .volume-slider {
             flex: 1;
-            margin: 0 10px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
         }
         
-        .audio-toggle {
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .volume-value {
+            font-size: calc(var(--base-font-size) * 0.9);
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .volume-toggle {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: calc(var(--base-font-size) * 0.9);
+            margin-top: 10px;
+            justify-content: center;
         }
         
-        .audio-toggle input {
+        .volume-toggle input {
             margin: 0;
         }
         
-        .audio-presets {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-        
-        .audio-preset {
-            padding: 6px 12px;
-            background: var(--secondary-color);
+        .memorial-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--primary-color);
             color: white;
             border-radius: 4px;
             font-size: calc(var(--base-font-size) * 0.8);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .audio-preset:hover {
-            background: var(--primary-color);
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>新安琅琊王氏道桥恒公支<br>谱载查询暨先祖祭祀平台</h1>
+        <h1>新安琅琊王氏道桥恒公支<br>谱载查询暨先世祭祀平台</h1>
         <p>传承家族意识 · 卅六世先军使命</p>
     </header>
 
@@ -460,77 +470,53 @@
 
     <div id="result"></div>
 
-    <!-- 音效控制面板 - 移动到完整世系后、祭祀面板前 -->
-    <div class="audio-controls">
-        <div class="audio-title">音效控制</div>
+    <!-- 新的音量控制面板 -->
+    <div class="volume-controls">
+        <div class="volume-title">音效控制</div>
         
-        <div class="audio-control-group">
-            <div class="audio-toggle">
-                <input type="checkbox" id="bgMusicToggle" checked>
-                <label for="bgMusicToggle">背景音乐</label>
-            </div>
-            <div class="audio-toggle">
-                <input type="checkbox" id="soundEffectsToggle" checked>
-                <label for="soundEffectsToggle">音效</label>
-            </div>
+        <div class="volume-control-group">
+            <label class="volume-label" for="bgMusicVolume">背景音乐</label>
+            <input type="range" id="bgMusicVolume" class="volume-slider" min="0" max="100" value="50">
+            <span class="volume-value" id="bgMusicValue">50</span>
         </div>
         
-        <div class="audio-control-group">
-            <label class="audio-label" for="bgMusicVolume">背景音乐音量</label>
-            <input type="range" id="bgMusicVolume" class="audio-slider" min="0" max="100" value="50">
+        <div class="volume-control-group">
+            <label class="volume-label" for="soundEffectsVolume">音效</label>
+            <input type="range" id="soundEffectsVolume" class="volume-slider" min="0" max="100" value="70">
+            <span class="volume-value" id="soundEffectsValue">70</span>
         </div>
         
-        <div class="audio-control-group">
-            <label class="audio-label" for="soundEffectsVolume">音效音量</label>
-            <input type="range" id="soundEffectsVolume" class="audio-slider" min="0" max="100" value="70">
+        <div class="volume-toggle">
+            <input type="checkbox" id="bgMusicToggle" checked>
+            <label for="bgMusicToggle">启用背景音乐</label>
         </div>
         
-        <div class="audio-presets">
-            <div class="audio-preset" onclick="setAudioPreset('temple')">寺庙氛围</div>
-            <div class="audio-preset" onclick="setAudioPreset('nature')">自然宁静</div>
-            <div class="audio-preset" onclick="setAudioPreset('traditional')">传统祭祀</div>
+        <div class="volume-toggle">
+            <input type="checkbox" id="soundEffectsToggle" checked>
+            <label for="soundEffectsToggle">启用音效</label>
         </div>
     </div>
 
     <div id="memorialSection">
         <div class="memorial-header">
-            <div id="mainTributeTarget">当前祭祀</div>
+            <div id="mainTributeTarget">祭祀先世</div>
         </div>
 
         <div class="memorial-card">
-            <div class="memorial-title" id="personMemorialTitle"></div>
-            <div class="memorial-content" id="personMemorialContent"></div>
             <div class="incense-controls">
-                <button id="personIncenseBtn">普通香祭祀</button>
-                <button id="personLargeIncenseBtn">大香祭祀</button>
-            </div>
-            <div class="incense-count">
-                普通香祭祀数量：<span id="personIncenseCount">0</span> | 大香祭祀数量：<span id="personLargeIncenseCount">0</span>
-            </div>
-        </div>
-
-        <div id="spouseMemorialArea" class="memorial-card">
-            <div class="memorial-title" id="spouseMemorialTitle"></div>
-            <div class="memorial-content" id="spouseMemorialContent"></div>
-            <div class="incense-controls">
-                <button id="spouseIncenseBtn">普通香祭祀</button>
-                <button id="spouseLargeIncenseBtn">大香祭祀</button>
-            </div>
-            <div class="incense-count">
-                 普通香祭祀数量：<span id="spouseIncenseCount">0</span> | 大香祭祀数量：<span id="spouseLargeIncenseCount">0</span>
+                <button id="incenseBtn">路过祭祀（偶然发现，顺便表达敬意）</button>
+                <button id="largeIncenseBtn">特意祭祀（专程前来祭拜，表达敬意）</button>
             </div>
         </div>
 
         <div id="incenseAnimation">
-            🔥🔥🔥 🎋 祭祀中... 🎋 🔥🔥🔥
+            🔥🔥🔥🎋 祭祀中... 🎋🔥🔥
             <div id="tributeMessage"></div>
         </div>
-
-        <div id="tributeHistory">暂无祭祀记录</div>
     </div>
 
     <script>
-        // 家谱数据（简略版）
+        // 家谱数据
         const genealogyData = {
     "十九世祖": {
         "name": "恒",
@@ -1083,28 +1069,22 @@
         // 全局状态
         let searchHistory = JSON.parse(localStorage.getItem('genealogySearchHistory') || '[]');
         let currentPerson = null;
-        let currentSpouse = null; 
         let incenseRecords = JSON.parse(localStorage.getItem('incenseRecords') || '{}');
         
         // 音效系统
         const audioSystem = {
-            // 音频元素
-            bgMusic: document.getElementById('bgMusic'),
-            incenseSound: document.getElementById('incenseSound'),
-            bellSound: document.getElementById('bellSound'),
-            prayerSound: document.getElementById('prayerSound'),
-            
             // 初始化音效系统
             init: function() {
                 // 绑定音量控制事件
                 document.getElementById('bgMusicVolume').addEventListener('input', (e) => {
                     this.setVolume('bgMusic', e.target.value / 100);
+                    document.getElementById('bgMusicValue').textContent = e.target.value;
                 });
                 
                 document.getElementById('soundEffectsVolume').addEventListener('input', (e) => {
                     this.setVolume('incenseSound', e.target.value / 100);
                     this.setVolume('bellSound', e.target.value / 100);
-                    this.setVolume('prayerSound', e.target.value / 100);
+                    document.getElementById('soundEffectsValue').textContent = e.target.value;
                 });
                 
                 // 绑定音效开关事件
@@ -1125,6 +1105,10 @@
                 if (soundEffectsEnabled !== null) {
                     document.getElementById('soundEffectsToggle').checked = soundEffectsEnabled === 'true';
                 }
+                
+                // 恢复音量值显示
+                document.getElementById('bgMusicValue').textContent = document.getElementById('bgMusicVolume').value;
+                document.getElementById('soundEffectsValue').textContent = document.getElementById('soundEffectsVolume').value;
             },
             
             // 设置音量
@@ -1134,17 +1118,17 @@
                 }
             },
             
-            // 播放普通香音效
+            // 播放路过音效
             playIncenseSound: function(isLarge) {
                 if (!document.getElementById('soundEffectsToggle').checked) return;
                 
                 try {
                     if (isLarge) {
-                        // 大香播放钟声
+                        // 特意播放钟声
                         this.bellSound.currentTime = 0;
                         this.bellSound.play().catch(e => console.log("音效播放失败"));
                     } else {
-                        // 普通香播放普通香音效
+                        // 路过播放路过音效
                         this.incenseSound.currentTime = 0;
                         this.incenseSound.play().catch(e => console.log("音效播放失败"));
                     }
@@ -1233,20 +1217,9 @@
             return html;
         }
 
-        // 检测是否有殁殁殁殁葬信息
+        // 检测是否有殁葬信息
         function hasDeathBurialInfo(text) {
-            return text.includes('殁殁殁殁于') || text.includes('葬于') || text.includes('殁殁殁殁') || text.includes('葬');
-        }
-
-        // 提取配偶信息
-        function extractSpouseInfo(details) {
-            return details.includes('配') ? '配' : null;
-        }
-
-        // 提取配偶姓氏
-        function extractSpouseSurname(details) {
-            const surnameMatch = details.match(/配([^生]+?)氏/);
-            return surnameMatch ? surnameMatch[1] : '未知';
+            return text.includes('殁') || text.includes('葬') || text.includes('夭');
         }
 
         // 格式化信息展示文本
@@ -1257,7 +1230,7 @@
             text = text.replace(/│/g, '\n');
             
             // 2. 在指定关键字前添加换行符
-            const lineBreakKeywords = ['生于', '殁殁殁殁于', '葬于', '幼年夭折'];
+            const lineBreakKeywords = ['生于', '殁', '葬于', '幼年夭折'];
             lineBreakKeywords.forEach(keyword => {
                 text = text.replace(new RegExp(`([^\\n])(${keyword})`, 'g'), '$1\n$2');
             });
@@ -1289,7 +1262,7 @@
         function searchPerson() {
             const input = document.getElementById('codeInput').value.trim();
             if (!input) {
-                alert('请输入家谱编码或姓名');
+                alert('请输入关键词');
                 return;
             }
 
@@ -1303,7 +1276,6 @@
 
             if (matchedPerson) {
                 currentPerson = matchedPerson;
-                currentSpouse = extractSpouseInfo(matchedPerson.details);
                 renderPersonResult(matchedPerson);
                 addToSearchHistory(matchedPerson.code, matchedPerson.name);
                 initMemorialSection();
@@ -1311,20 +1283,20 @@
                 document.getElementById('result').innerHTML = `
                     <div class="empty-state">
                         <h3>未找到匹配的家族成员</h3>
-                        <p>请检查输入的编码/姓名是否正确，或尝试模糊查询</p>
+                        <p>请检查输入的关键词是否正确，或尝试模糊查询</p>
                     </div>
                 `;
                 document.getElementById('memorialSection').classList.remove('show');
             }
         }
 
-        // 渲染人物结果
+        // 渲染人物结果（完全保持不变）
         function renderPersonResult(person) {
             const resultEl = document.getElementById('result');
             // 格式化人物详情文本
             let formattedDetails = formatDisplayText(person.details);
-            const spouseInfo = extractSpouseInfo(person.details);
-            
+            const spouseInfo = person.details.includes('配');
+
             if (spouseInfo) {
                 const spouseIndex = formattedDetails.indexOf('配');
                 const personDetails = formattedDetails.substring(0, spouseIndex).trim();
@@ -1349,82 +1321,44 @@
             `;
         }
 
-        // 初始化祭祀区域
+        // 初始化祭祀区域（简化版，只显示按钮）
         function initMemorialSection() {
             const memorialSection = document.getElementById('memorialSection');
-            const mainTributeTarget = document.getElementById('mainTributeTarget');
-            const personMemorialTitle = document.getElementById('personMemorialTitle');
-            const personMemorialContent = document.getElementById('personMemorialContent');
-            const spouseMemorialArea = document.getElementById('spouseMemorialArea');
-            const spouseMemorialTitle = document.getElementById('spouseMemorialTitle');
-            const spouseMemorialContent = document.getElementById('spouseMemorialContent');
             
-            // 1. 去掉"当前祭祀"后的冒号，只保留文字
-            mainTributeTarget.textContent = '当前祭祀';
-            
-            // 2. 将祭祀对象信息放到第一个卡片的标题位置，格式和配偶卡片保持一致
-            personMemorialTitle.textContent = `${currentPerson.name} (${currentPerson.code})`;
-            personMemorialContent.textContent = ''; // 清空内容区域
-            
-            // 激活本人普通香按钮
+            // 检测祭祀条件
             const personHasDeathInfo = hasDeathBurialInfo(currentPerson.details);
-            document.getElementById('personIncenseBtn').disabled = !personHasDeathInfo;
-            document.getElementById('personLargeIncenseBtn').disabled = !personHasDeathInfo;
-            loadIncenseCount('person', currentPerson.code);
             
-            // 处理配偶祭祀区域：用配偶姓氏代替"配"字
-            if (currentSpouse) {
-                spouseMemorialArea.style.display = 'block';
-                const spouseSurname = extractSpouseSurname(currentPerson.details);
-                spouseMemorialTitle.textContent = `${spouseSurname}氏`; // 配偶卡片标题保持原有格式
-                spouseMemorialContent.textContent = ''; // 清空内容区域
-                
-                const spouseHasDeathInfo = hasDeathBurialInfo(currentPerson.details);
-                document.getElementById('spouseIncenseBtn').disabled = !spouseHasDeathInfo;
-                document.getElementById('spouseLargeIncenseBtn').disabled = !spouseHasDeathInfo;
-                loadIncenseCount('spouse', `${currentPerson.code}_spouse`);
-            } else {
-                spouseMemorialArea.style.display = 'none';
-            }
+            // 激活祭祀按钮
+            document.getElementById('incenseBtn').disabled = !personHasDeathInfo;
+            document.getElementById('largeIncenseBtn').disabled = !personHasDeathInfo;
             
             // 显示祭祀区域
-            if (personHasDeathInfo || (currentSpouse && hasDeathBurialInfo(currentPerson.details))) {
+            if (personHasDeathInfo) {
                 memorialSection.classList.add('show');
             } else {
                 memorialSection.classList.remove('show');
             }
-            
-            loadIncenseHistory();
         }
 
-        // 绑定普通香按钮事件
+        // 绑定祭祀按钮事件
         function bindIncenseEvents() {
-            // 本人普通香
-            document.getElementById('personIncenseBtn').addEventListener('click', () => {
-                lightIncense('person', currentPerson.code, false);
+            // 路过祭祀（偶然发现，顺便表达敬意）
+            document.getElementById('incenseBtn').addEventListener('click', () => {
+                lightIncense(false);
             });
-            // 本人大香
-            document.getElementById('personLargeIncenseBtn').addEventListener('click', () => {
-                lightIncense('person', currentPerson.code, true);
-            });
-            // 配偶普通香
-            document.getElementById('spouseIncenseBtn').addEventListener('click', () => {
-                lightIncense('spouse', `${currentPerson.code}_spouse`, false);
-            });
-            // 配偶大香
-            document.getElementById('spouseLargeIncenseBtn').addEventListener('click', () => {
-                lightIncense('spouse', `${currentPerson.code}_spouse`, true);
+            // 特意祭祀（专程前来祭拜，表达敬意）
+            document.getElementById('largeIncenseBtn').addEventListener('click', () => {
+                lightIncense(true);
             });
         }
 
-        // 普通香核心逻辑（带音效）
-        function lightIncense(type, key, isLarge) {
+        // 祭祀核心逻辑（带音效）
+        function lightIncense(isLarge) {
             const animationEl = document.getElementById('incenseAnimation');
             const messageEl = document.getElementById('tributeMessage');
-            const personType = type === 'person' ? currentPerson.name : `${extractSpouseSurname(currentPerson.details)}氏`;
-            const incenseType = isLarge ? '大香' : '普通香';
+            const incenseType = isLarge ? '特意' : '路过';
             
-            console.log('开始普通香:', { type, key, isLarge, personType }); // 调试信息
+            console.log('开始祭祀:', { isLarge, incenseType }); // 调试信息
             
             // 播放音效
             try {
@@ -1434,36 +1368,24 @@
             }
             
             // 重置动画
-            animationEl.classList.remove('large');
-            messageEl.classList.remove('large');
             animationEl.style.display = 'none';
             
             // 显示动画
             setTimeout(() => {
-                if (isLarge) {
-                    animationEl.classList.add('large');
-                    messageEl.classList.add('large');
-                }
                 animationEl.style.display = 'block';
                 
-                // 随机祭祀语
+                // 随机祭祀语（不包含具体人物信息）
                 const blessings = isLarge ? 
-                    [`🙏🙏🙏🙏🙏🙏🙏🙏🙏 为${personType}上${incenseType}，愿家族昌盛，子孙安康！`, 
-                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 焚${incenseType}敬先祖，福泽延绵万代兴！`,
-                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 敬${incenseType}以寄哀思，愿先灵安息，佑我后人！`] :
-                    [`🙏🙏🙏🙏🙏🙏🙏🙏🙏 为${personType}上普通香祭祀，愿平安顺遂！`, 
-                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 一柱清香敬先祖，血脉相连情意长！`,
-                     `🙏🙏🙏🙏🙏🙏🙏🙏🙏 焚香祭祖，祈愿家族兴旺，福寿绵长！`];
+                    [`🙏🙏🙏 上大香祭祀，愿家族昌盛，子孙安康！`, 
+                     `🙏🙏🙏 焚大香敬先世，福泽延绵万代兴！`,
+                     `🙏🙏🙏 敬大香以寄哀思，愿先灵安息，佑我后人！`] :
+                    [`🙏🙏🙏上香祭祀，愿平安顺遂！`, 
+                     `🙏🙏🙏一柱清香敬先世，血脉相连情意长！`,
+                     `🙏🙏🙏 焚大香祭祖，祈愿家族兴旺，福寿绵长！`];
                 const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
                 messageEl.textContent = randomBlessing;
                 
-                // 更新计数
-                updateIncenseCount(key, isLarge);
-                
-                // 保存记录
-                saveIncenseRecord(key, personType, incenseType);
-                
-                console.log('普通香完成，开始5秒倒计时'); // 调试信息
+                console.log('祭祀完成，开始5秒倒计时'); // 调试信息
                 
                 // 5秒后隐藏动画
                 setTimeout(() => {
@@ -1471,76 +1393,6 @@
                     console.log('动画隐藏完成'); // 调试信息
                 }, 5000);
             }, 100);
-        }
-
-        // 加载普通香计数
-        function loadIncenseCount(type, key) {
-            const normalCountEl = document.getElementById(`${type}IncenseCount`);
-            const largeCountEl = document.getElementById(`${type}LargeIncenseCount`);
-            
-            const counts = incenseRecords[key] || { normal: 0, large: 0 };
-            normalCountEl.textContent = counts.normal;
-            largeCountEl.textContent = counts.large;
-        }
-
-        // 更新普通香计数
-        function updateIncenseCount(key, isLarge) {
-            if (!incenseRecords[key]) {
-                incenseRecords[key] = { normal: 0, large: 0 };
-            }
-            
-            if (isLarge) {
-                incenseRecords[key].large++;
-                document.getElementById(key.includes('_spouse') ? 'spouseLargeIncenseCount' : 'personLargeIncenseCount').textContent = incenseRecords[key].large;
-            } else {
-                incenseRecords[key].normal++;
-                document.getElementById(key.includes('_spouse') ? 'spouseIncenseCount' : 'personIncenseCount').textContent = incenseRecords[key].normal;
-            }
-            
-            localStorage.setItem('incenseRecords', JSON.stringify(incenseRecords));
-            loadIncenseHistory();
-        }
-
-        // 保存普通香记录
-        function saveIncenseRecord(key, personName, incenseType) {
-            const now = new Date();
-            const timeStr = now.toLocaleString('zh-CN');
-            const record = {
-                time: timeStr,
-                person: personName,
-                type: incenseType,
-                key: key
-            };
-            
-            let historyRecords = JSON.parse(localStorage.getItem('incenseHistory') || '[]');
-            historyRecords.unshift(record);
-            if (historyRecords.length > 10) {
-                historyRecords = historyRecords.slice(0, 10);
-            }
-            
-            localStorage.setItem('incenseHistory', JSON.stringify(historyRecords));
-        }
-
-        // 加载普通香历史
-        function loadIncenseHistory() {
-            const historyEl = document.getElementById('tributeHistory');
-            const historyRecords = JSON.parse(localStorage.getItem('incenseHistory') || '[]');
-            
-            if (historyRecords.length === 0) {
-                historyEl.textContent = '暂无普通香记录';
-                return;
-            }
-            
-            historyEl.innerHTML = `
-                <div style="font-weight:600; margin-bottom:8px;">普通香记录（最近10条）：</div>
-                <div style="max-height:150px; overflow-y:auto; text-align:left; padding-left:10px;">
-                    ${historyRecords.map((item, index) => `
-                        <div style="margin:4px 0; font-size:0.9rem;">
-                            ${index+1}. ${item.time} - 为${item.person}上${item.type}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
         }
 
         // 添加到搜索历史
@@ -1583,13 +1435,6 @@
             root.style.setProperty('--base-font-size', `${newSize}px`);
         }
 
-        // 设置音频预设（全局函数）
-        function setAudioPreset(presetName) {
-            // 简化版本，不依赖外部音频资源
-            console.log('切换到音频预设:', presetName);
-            alert(`已切换到${presetName}模式`);
-        }
-
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             initPage();
@@ -1600,7 +1445,6 @@
                 <audio id="bgMusic" src=""></audio>
                 <audio id="incenseSound" src=""></audio>
                 <audio id="bellSound" src=""></audio>
-                <audio id="prayerSound" src=""></audio>
             `;
             document.body.appendChild(audioContainer);
             
@@ -1650,4 +1494,3 @@
     </script>
 </body>
 </html>
-
